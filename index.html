@@ -6,14 +6,36 @@ crossorigin="anonymous"></script>
 </Head>
 
 <body>
+<form name="answerform">
+  <h3>Question 1</h3>
+  <div id="editor1"></div>
+  <textarea name="entry_1" id="entry_1" onClick="EqEditor.moveTo('editor1')"></textarea>
+  <p><img id="equation1"></p>
 
-<div id="toolbar"></div>
-<div id="latexInput">2+sin(x)</div>
-<img id="output">
+  <h3>Question 2</h3>
+  <div id="editor2"></div>
+  <textarea name="entry_2" id="entry_2" onClick="EqEditor.moveTo('editor2')"></textarea>
+  <p><img id="equation2"></p>
 
-<script type="text/javascript">
-    EqEditor.TextArea.link('latexInput')
-        .addToolbar(new EqEditor.Toolbar('toolbar'), true)
-        .addOutput(new EqEditor.Output('output'));
+  <h3>Question 3</h3>
+  <div id="editor3"></div>
+  <textarea name="entry_3" id="entry_3" onClick="EqEditor.moveTo('editor3')"></textarea>
+  <p><img id="equation3"></p>
+</form>
+
+<script>
+    toolbar = new EqEditor.Toolbar('editor1')
+
+    EqEditor.TextArea.link('entry_1', true)
+        .addOutput(new EqEditor.Output('equation1'))
+        .addToolbar(toolbar, true);
+
+    EqEditor.TextArea.link('entry_2')
+        .addOutput(new EqEditor.Output('equation2'))
+        .addToolbar(toolbar, false);
+
+    EqEditor.TextArea.link('entry_3')
+        .addOutput(new EqEditor.Output('equation3'))
+        .addToolbar(toolbar, false);
 </script>
 </body>
