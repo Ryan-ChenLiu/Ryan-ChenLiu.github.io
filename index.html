@@ -1,3 +1,19 @@
-<p>Hello </p>
-<p>This is my website. </p>
-<p>Please wait until it is fully established.</p>
+
+
+<Head>
+<script src="https://editor.codecogs.com/eqneditor.api.min.js"
+crossorigin="anonymous"></script>
+</Head>
+
+<body>
+
+<div id="toolbar"></div>
+<div id="latexInput">2+sin(x)</div>
+<img id="output">
+
+<script type="text/javascript">
+    EqEditor.TextArea.link('latexInput')
+        .addToolbar(new EqEditor.Toolbar('toolbar'), true)
+        .addOutput(new EqEditor.Output('output'));
+</script>
+</body>
