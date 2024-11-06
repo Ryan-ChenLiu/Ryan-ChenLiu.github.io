@@ -60,3 +60,9 @@ h2 {
   font-size: 1.2em;
   color: #333;
 }
+
+#solution {
+  margin-top: 20px;
+  font-style: italic;
+  color: #555;
+}
