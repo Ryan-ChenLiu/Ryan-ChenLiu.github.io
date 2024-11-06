@@ -1,3 +1,4 @@
+// Initialize quiz variables
 let currentQuestionIndex = 0;
 let score = 0;
 let studentInfo = { id: "", name: "" };
@@ -33,6 +34,22 @@ const questions = [
   }
 ];
 
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID",
+  measurementId: "YOUR_MEASUREMENT_ID"
+};
+
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// Start quiz and hide the info form
 function startQuiz(event) {
   event.preventDefault();
   studentInfo.id = document.getElementById("student-id").value;
@@ -41,10 +58,10 @@ function startQuiz(event) {
   questionStartTime = Date.now();
   document.getElementById("student-info").style.display = "none";
   document.getElementById("quiz-container").style.display = "block";
-
   displayQuestion();
 }
 
+// Display question
 function displayQuestion() {
   const questionElement = document.getElementById("question");
   const options = document.querySelectorAll(".option");
@@ -53,8 +70,8 @@ function displayQuestion() {
   questionStartTime = Date.now(); // Start timing for the current question
 
   const question = questions[currentQuestionIndex];
-
   questionElement.innerHTML = question.question;
+
   options.forEach((option, index) => {
     option.innerText = question.answers[index];
     option.style.backgroundColor = "#3498db";
@@ -62,19 +79,17 @@ function displayQuestion() {
   });
 
   solutionElement.innerText = "";
-
-  // Update navigation buttons
   updateNavigationButtons();
 
   // Typeset any MathJax expressions
   MathJax.typesetPromise();
 }
 
+// Handle answer selection
 function selectAnswer(answerIndex) {
   const question = questions[currentQuestionIndex];
   const solutionElement = document.getElementById("solution");
   const timeTaken = (Date.now() - questionStartTime) / 1000; // time in seconds
-
   const isCorrect = answerIndex === question.correct;
 
   // Store the user's answer
@@ -97,17 +112,17 @@ function selectAnswer(answerIndex) {
   }
 
   disableOptions();
-
-  // Typeset any MathJax expressions
   MathJax.typesetPromise();
 }
 
+// Disable options
 function disableOptions() {
   document.querySelectorAll(".option").forEach(option => {
     option.disabled = true;
   });
 }
 
+// Enable options
 function enableOptions() {
   document.querySelectorAll(".option").forEach(option => {
     option.disabled = false;
@@ -115,23 +130,22 @@ function enableOptions() {
   });
 }
 
+// Navigate to question
 function goToQuestion(index) {
   currentQuestionIndex = index;
   displayQuestion();
 
-  // If the user has already selected an answer for this question, show it
   if (answers[currentQuestionIndex]) {
     const selectedAnswer = answers[currentQuestionIndex].selected;
     const selectedIndex = questions[currentQuestionIndex].answers.indexOf(selectedAnswer);
-
     const isCorrect = answers[currentQuestionIndex].isCorrect;
     document.querySelectorAll(".option")[selectedIndex].style.backgroundColor = isCorrect ? "#2ecc71" : "#e74c3c";
     document.getElementById("solution").innerHTML = (isCorrect ? "Correct! " : "Incorrect. ") + answers[currentQuestionIndex].explanation;
-
     disableOptions();
   }
 }
 
+// Update navigation buttons
 function updateNavigationButtons() {
   const navigationContainer = document.getElementById("navigation");
   navigationContainer.innerHTML = "";
@@ -140,31 +154,26 @@ function updateNavigationButtons() {
     const navButton = document.createElement("button");
     navButton.innerText = index + 1;
     navButton.onclick = () => goToQuestion(index);
-
-    if (answers[index]) {
-      navButton.style.backgroundColor = answers[index].isCorrect ? "#2ecc71" : "#e74c3c";
-    } else {
-      navButton.style.backgroundColor = "#ddd";
-    }
-
+    navButton.style.backgroundColor = answers[index] ? (answers[index].isCorrect ? "#2ecc71" : "#e74c3c") : "#ddd";
     navigationContainer.appendChild(navButton);
   });
 }
 
+// Go to next question
 function nextQuestion() {
   currentQuestionIndex++;
   if (currentQuestionIndex < questions.length) {
     enableOptions();
     displayQuestion();
   } else {
-    document.getElementById("next-btn").style.display = "none"; // Hide Next button
-    document.getElementById("submit-btn").style.display = "block"; // Show Submit button
+    document.getElementById("next-btn").style.display = "none";
+    document.getElementById("submit-btn").style.display = "block";
   }
 }
 
+// Submit quiz results
 function submitQuiz() {
   displayResults();
-
   totalTime = (Date.now() - startTime) / 1000; // Total time in seconds
 
   const resultsData = {
@@ -184,6 +193,7 @@ function submitQuiz() {
   saveResultsToFirestore(resultsData);
 }
 
+// Display results
 function displayResults() {
   document.getElementById("quiz-container").style.display = "none";
   document.getElementById("results-container").style.display = "block";
@@ -194,7 +204,6 @@ function displayResults() {
     <p><strong>Score:</strong> ${score} / ${questions.length}</p>
     <p><strong>Total Time Taken:</strong> ${formatTime(totalTime)}</p>
   `;
-
   document.getElementById("student-info-summary").innerHTML = summary;
 
   const averageTime = totalTime / questions.length;
@@ -211,43 +220,18 @@ function displayResults() {
     `;
   });
 
-  const statsHTML = `
-    <p><strong>Average Time per Question:</strong> ${formatTime(averageTime)}</p>
-  `;
-
-  document.getElementById("results").innerHTML = resultsHTML + statsHTML;
-
-  // Typeset any MathJax expressions
+  document.getElementById("results").innerHTML = resultsHTML + `<p><strong>Average Time per Question:</strong> ${formatTime(averageTime)}</p>`;
   MathJax.typesetPromise();
 }
 
+// Format time in minutes and seconds
 function formatTime(seconds) {
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
   return `${mins} minutes, ${secs} seconds`;
 }
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB74rDbZl3GnXSP_nyhdvIE-v3hSbNUzPM",
-  authDomain: "exam-results-accfin2018.firebaseapp.com",
-  projectId: "exam-results-accfin2018",
-  storageBucket: "exam-results-accfin2018.firebasestorage.app",
-  messagingSenderId: "162880978689",
-  appId: "1:162880978689:web:723507aafc6d79c5586500",
-  measurementId: "G-R8N43LVZE8"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-firebase.analytics();
-
-// Initialize Firestore
-const db = firebase.firestore();
-
-// Function to save results to Firestore
+// Save results to Firebase Firestore
 function saveResultsToFirestore(data) {
   db.collection("quizResults").add(data)
     .then(() => {
