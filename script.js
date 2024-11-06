@@ -1,3 +1,8 @@
+let currentQuestionIndex = 0;
+let score = 0;
+let studentInfo = { id: "", name: "" };
+let answers = [];
+
 const questions = [
   {
     question: "What is the mean of the dataset: 3, 7, 7, 2, 9?",
@@ -25,8 +30,16 @@ const questions = [
   }
 ];
 
-let currentQuestionIndex = 0;
-let score = 0;
+function startQuiz(event) {
+  event.preventDefault();
+  studentInfo.id = document.getElementById("student-id").value;
+  studentInfo.name = document.getElementById("student-name").value;
+
+  document.getElementById("student-info").style.display = "none";
+  document.getElementById("quiz-container").style.display = "block";
+
+  displayQuestion();
+}
 
 function displayQuestion() {
   const questionElement = document.getElementById("question");
@@ -38,14 +51,23 @@ function displayQuestion() {
     option.innerText = questions[currentQuestionIndex].answers[index];
     option.style.backgroundColor = "#3498db";
   });
-  solutionElement.innerText = ""; // Clear the previous solution
+  solutionElement.innerText = "";
 }
 
 function selectAnswer(answerIndex) {
   const question = questions[currentQuestionIndex];
   const solutionElement = document.getElementById("solution");
 
-  if (answerIndex === question.correct) {
+  const isCorrect = answerIndex === question.correct;
+  answers.push({
+    question: question.question,
+    selected: question.answers[answerIndex],
+    correct: question.answers[question.correct],
+    explanation: question.solution,
+    isCorrect
+  });
+
+  if (isCorrect) {
     score++;
     solutionElement.innerText = "Correct! " + question.solution;
     document.querySelectorAll(".option")[answerIndex].style.backgroundColor = "#2ecc71";
@@ -54,14 +76,11 @@ function selectAnswer(answerIndex) {
     document.querySelectorAll(".option")[answerIndex].style.backgroundColor = "#e74c3c";
   }
 
-  document.getElementById("score").innerText = `Score: ${score}`;
   disableOptions();
 }
 
 function disableOptions() {
-  document.querySelectorAll(".option").forEach(option => {
-    option.disabled = true;
-  });
+  document.querySelectorAll(".option").forEach(option => option.disabled = true);
 }
 
 function enableOptions() {
@@ -77,9 +96,35 @@ function nextQuestion() {
     enableOptions();
     displayQuestion();
   } else {
-    document.getElementById("question-container").innerHTML = `<p>Exam Completed!</p>`;
-    document.getElementById("next-btn").style.display = "none";
+    displayResults();
   }
 }
 
-displayQuestion();
+function displayResults() {
+  document.getElementById("quiz-container").style.display = "none";
+  document.getElementById("results-container").style.display = "block";
+
+  const summary = `
+    <p><strong>Student ID:</strong> ${studentInfo.id}</p>
+    <p><strong>Name:</strong> ${studentInfo.name}</p>
+    <p><strong>Score:</strong> ${score} / ${questions.length}</p>
+  `;
+
+  document.getElementById("student-info-summary").innerHTML = summary;
+
+  let resultsHTML = "";
+  answers.forEach((answer, index) => {
+    resultsHTML += `
+      <h3>Question ${index + 1}</h3>
+      <p><strong>Question:</strong> ${answer.question}</p>
+      <p><strong>Your Answer:</strong> ${answer.selected}</p>
+      <p><strong>Correct Answer:</strong> ${answer.correct}</p>
+      <p><strong>Explanation:</strong> ${answer.explanation}</p>
+      <p><strong>Result:</strong> ${answer.isCorrect ? "Correct" : "Incorrect"}</p><hr>
+    `;
+  });
+
+  document.getElementById("results").innerHTML = resultsHTML;
+}
+
+document.getElementById("student-info").style.display = "block";
