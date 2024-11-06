@@ -11,7 +11,7 @@ const questions = [
     question: "What is the mean of the dataset: 3, 7, 7, 2, 9?",
     answers: ["5.6", "6.0", "7.0", "4.5"],
     correct: 0,
-    solution: "Solution: The mean is calculated as $\frac{3 + 7 + 7 + 2 + 9}{5} = 5.6.$"
+    solution: "Solution: The mean is calculated as $$\\frac{3 + 7 + 7 + 2 + 9}{5} = 5.6.$$"
   },
   {
     question: "Which of the following is a measure of central tendency?",
@@ -54,7 +54,7 @@ function displayQuestion() {
 
   const question = questions[currentQuestionIndex];
 
-  questionElement.innerText = question.question;
+  questionElement.innerHTML = question.question;
   options.forEach((option, index) => {
     option.innerText = question.answers[index];
     option.style.backgroundColor = "#3498db";
@@ -89,10 +89,10 @@ function selectAnswer(answerIndex) {
 
   if (isCorrect) {
     score++;
-    solutionElement.innerText = "Correct! " + question.solution;
+    solutionElement.innerHTML = "Correct! " + question.solution;
     document.querySelectorAll(".option")[answerIndex].style.backgroundColor = "#2ecc71";
   } else {
-    solutionElement.innerText = "Incorrect. " + question.solution;
+    solutionElement.innerHTML = "Incorrect. " + question.solution;
     document.querySelectorAll(".option")[answerIndex].style.backgroundColor = "#e74c3c";
   }
 
@@ -126,7 +126,7 @@ function goToQuestion(index) {
 
     const isCorrect = answers[currentQuestionIndex].isCorrect;
     document.querySelectorAll(".option")[selectedIndex].style.backgroundColor = isCorrect ? "#2ecc71" : "#e74c3c";
-    document.getElementById("solution").innerText = (isCorrect ? "Correct! " : "Incorrect. ") + answers[currentQuestionIndex].explanation;
+    document.getElementById("solution").innerHTML = (isCorrect ? "Correct! " : "Incorrect. ") + answers[currentQuestionIndex].explanation;
 
     disableOptions();
   }
@@ -164,7 +164,10 @@ function nextQuestion() {
 
 function submitQuiz() {
   displayResults();
-    const resultsData = {
+
+  totalTime = (Date.now() - startTime) / 1000; // Total time in seconds
+
+  const resultsData = {
     studentInfo: studentInfo,
     score: score,
     totalTime: totalTime,
@@ -177,14 +180,13 @@ function submitQuiz() {
     }))
   };
 
-  // Send the results data to Google Sheets
-  sendResultsToGoogleSheet(resultsData);
+  // Save results to Firebase Firestore
+  saveResultsToFirestore(resultsData);
 }
 
 function displayResults() {
   document.getElementById("quiz-container").style.display = "none";
   document.getElementById("results-container").style.display = "block";
-  totalTime = (Date.now() - startTime) / 1000; // Total time in seconds
 
   const summary = `
     <p><strong>Student ID:</strong> ${studentInfo.id}</p>
@@ -218,33 +220,42 @@ function displayResults() {
   // Typeset any MathJax expressions
   MathJax.typesetPromise();
 }
-function sendResultsToGoogleSheet(data) {
-  const scriptURL = "https://script.google.com/macros/s/AKfycbz2_jXQk7QYqLPrgnqDH0oD_8YyXSwb81_jU3l3s0G81vQhOOwip4PXF8-KKmlJNla3EA/exec"; // Replace with the URL from your Apps Script deployment
-  
-  fetch(scriptURL, {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  .then(response => response.json())
-  .then(response => {
-    if (response.status === "success") {
-      console.log("Results stored successfully!");
-    } else {
-      console.error("Error storing results:", response);
-    }
-  })
-  .catch(error => {
-    console.error("Error:", error);
-  });
-}
 
 function formatTime(seconds) {
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
   return `${mins} minutes, ${secs} seconds`;
+}
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB74rDbZl3GnXSP_nyhdvIE-v3hSbNUzPM",
+  authDomain: "exam-results-accfin2018.firebaseapp.com",
+  projectId: "exam-results-accfin2018",
+  storageBucket: "exam-results-accfin2018.firebasestorage.app",
+  messagingSenderId: "162880978689",
+  appId: "1:162880978689:web:723507aafc6d79c5586500",
+  measurementId: "G-R8N43LVZE8"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+firebase.analytics();
+
+// Initialize Firestore
+const db = firebase.firestore();
+
+// Function to save results to Firestore
+function saveResultsToFirestore(data) {
+  db.collection("quizResults").add(data)
+    .then(() => {
+      console.log("Results stored successfully!");
+    })
+    .catch((error) => {
+      console.error("Error storing results: ", error);
+    });
 }
 
 // Initially display the student info form
