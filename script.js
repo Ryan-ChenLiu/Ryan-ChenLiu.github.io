@@ -45,9 +45,9 @@ const firebaseConfig = {
   measurementId: "YOUR_MEASUREMENT_ID"
 };
 
-// Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+// // Initialize Firebase
+// const app = firebase.initializeApp(firebaseConfig);
+// const db = firebase.firestore();
 
 // Start quiz and hide the info form
 function startQuiz(event) {
