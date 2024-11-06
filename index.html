@@ -7,7 +7,18 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="quiz-container">
+  <div id="student-info" class="container">
+    <h2>Welcome to the Statistical Methods Mock Exam</h2>
+    <form id="student-form" onsubmit="startQuiz(event)">
+      <label for="student-id">Student ID:</label>
+      <input type="text" id="student-id" required><br><br>
+      <label for="student-name">Name:</label>
+      <input type="text" id="student-name" required><br><br>
+      <button type="submit">Start Exam</button>
+    </form>
+  </div>
+
+  <div id="quiz-container" class="container" style="display: none;">
     <h2>Statistical Methods Mock Exam</h2>
     <div id="question-container">
       <p id="question"></p>
@@ -22,7 +33,13 @@
     <button id="next-btn" onclick="nextQuestion()">Next Question</button>
     <p id="score"></p>
   </div>
+
+  <div id="results-container" class="container" style="display: none;">
+    <h2>Exam Results</h2>
+    <p id="student-info-summary"></p>
+    <div id="results"></div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
-
