@@ -11,7 +11,7 @@ const questions = [
     question: "What is the mean of the dataset: 3, 7, 7, 2, 9?",
     answers: ["5.6", "6.0", "7.0", "4.5"],
     correct: 0,
-    solution: "Solution: The mean is calculated as $$\\frac{3 + 7 + 7 + 2 + 9}{5} = 5.6.$$"
+    solution: "Solution: The mean is calculated as $\frac{3 + 7 + 7 + 2 + 9}{5} = 5.6.$"
   },
   {
     question: "Which of the following is a measure of central tendency?",
@@ -149,6 +149,17 @@ function updateNavigationButtons() {
 
     navigationContainer.appendChild(navButton);
   });
+}
+
+function nextQuestion() {
+  currentQuestionIndex++;
+  if (currentQuestionIndex < questions.length) {
+    enableOptions();
+    displayQuestion();
+  } else {
+    document.getElementById("next-btn").style.display = "none"; // Hide Next button
+    document.getElementById("submit-btn").style.display = "block"; // Show Submit button
+  }
 }
 
 function submitQuiz() {
