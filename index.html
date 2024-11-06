@@ -81,5 +81,21 @@
   </footer>
 
   <script src="script.js"></script>
+  <!-- Add this script tag in your index.html, preferably just before the closing </body> tag -->
+<script>
+// Disable Right-Click
+document.addEventListener('contextmenu', event => event.preventDefault());
+
+// Disable Keyboard Shortcuts
+document.addEventListener('keydown', function(event) {
+  // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+  if (event.keyCode === 123 || 
+      (event.ctrlKey && event.shiftKey && (event.keyCode === 73 || event.keyCode === 74)) || 
+      (event.ctrlKey && event.keyCode === 85)) {
+    event.preventDefault();
+  }
+});
+</script>
+
 </body>
 </html>
