@@ -29,6 +29,47 @@ const questions = [
     solution: "Solution: The normal distribution is symmetric and bell-shaped."
   }
 ];
+// Add navigation controls
+function goToQuestion(index) {
+  currentQuestionIndex = index;
+  displayQuestion();
+}
+
+function displayQuestion() {
+  // ... existing code ...
+
+  // Update navigation buttons
+  updateNavigationButtons();
+}
+
+function updateNavigationButtons() {
+  const navigationContainer = document.getElementById("navigation");
+  navigationContainer.innerHTML = "";
+
+  questions.forEach((_, index) => {
+    const navButton = document.createElement("button");
+    navButton.innerText = index + 1;
+    navButton.onclick = () => goToQuestion(index);
+    navButton.style.backgroundColor = answers[index] !== undefined ? "#2ecc71" : "#e74c3c";
+    navigationContainer.appendChild(navButton);
+  });
+}
+
+// Modify selectAnswer to save user's answer
+function selectAnswer(answerIndex) {
+  const question = questions[currentQuestionIndex];
+  answers[currentQuestionIndex] = {
+    selectedIndex: answerIndex,
+    isCorrect: answerIndex === question.correct,
+    // ... existing code ...
+  };
+  // ... existing code ...
+}
+
+// Add a submit button to finalize answers
+function submitQuiz() {
+  displayResults();
+}
 
 function startQuiz(event) {
   event.preventDefault();
