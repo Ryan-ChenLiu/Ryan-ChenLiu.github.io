@@ -3,42 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Statistics Methods Mock Exam</title>
+  <title>Statistical Methods Course</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="student-info" class="container">
-    <h2>Welcome to the Statistical Methods Mock Exam</h2>
-    <form id="student-form" onsubmit="startQuiz(event)">
-      <label for="student-id">Student ID:</label>
-      <input type="text" id="student-id" required><br><br>
-      <label for="student-name">Name:</label>
-      <input type="text" id="student-name" required><br><br>
-      <button type="submit">Start Exam</button>
-    </form>
-  </div>
+  <header>
+    <h1>Statistical Methods Course</h1>
+    <nav>
+      <a href="#overview">Course Overview</a>
+      <a href="#materials">Study Materials</a>
+      <a href="#quiz">Quiz</a>
+    </nav>
+  </header>
 
-  <div id="quiz-container" class="container" style="display: none;">
-    <h2>Statistical Methods Mock Exam</h2>
-    <div id="question-container">
-      <p id="question"></p>
-      <div class="options">
-        <button class="option" onclick="selectAnswer(0)">Option 1</button>
-        <button class="option" onclick="selectAnswer(1)">Option 2</button>
-        <button class="option" onclick="selectAnswer(2)">Option 3</button>
-        <button class="option" onclick="selectAnswer(3)">Option 4</button>
+  <main>
+    <!-- Overview Section -->
+    <section id="overview">
+      <h2>Course Overview</h2>
+      <p>This course covers the fundamentals of statistical methods, including mean, variance, standard deviation, distributions, and hypothesis testing.</p>
+    </section>
+
+    <!-- Study Materials Section -->
+    <section id="materials">
+      <h2>Study Materials</h2>
+      <p>Here are some key resources to help you prepare for the exam:</p>
+      <ul>
+        <li><a href="#mean-variance">Understanding Mean and Variance</a></li>
+        <li><a href="#distributions">Introduction to Distributions</a></li>
+        <li><a href="#hypothesis-testing">Hypothesis Testing Basics</a></li>
+      </ul>
+    </section>
+
+    <!-- Quiz Section -->
+    <section id="quiz">
+      <h2>Statistical Methods Mock Exam</h2>
+      
+      <!-- Student Info Collection -->
+      <div id="student-info" class="container">
+        <h3>Enter Your Information</h3>
+        <form id="student-form" onsubmit="startQuiz(event)">
+          <label for="student-id">Student ID:</label>
+          <input type="text" id="student-id" required><br><br>
+          <label for="student-name">Name:</label>
+          <input type="text" id="student-name" required><br><br>
+          <button type="submit">Start Exam</button>
+        </form>
       </div>
-      <p id="solution"></p>
-    </div>
-    <button id="next-btn" onclick="nextQuestion()">Next Question</button>
-    <p id="score"></p>
-  </div>
 
-  <div id="results-container" class="container" style="display: none;">
-    <h2>Exam Results</h2>
-    <p id="student-info-summary"></p>
-    <div id="results"></div>
-  </div>
+      <!-- Quiz Questions and Answers -->
+      <div id="quiz-container" class="container" style="display: none;">
+        <h3>Quiz</h3>
+        <div id="question-container">
+          <p id="question"></p>
+          <div class="options">
+            <button class="option" onclick="selectAnswer(0)">Option 1</button>
+            <button class="option" onclick="selectAnswer(1)">Option 2</button>
+            <button class="option" onclick="selectAnswer(2)">Option 3</button>
+            <button class="option" onclick="selectAnswer(3)">Option 4</button>
+          </div>
+          <p id="solution"></p>
+        </div>
+        <button id="next-btn" onclick="nextQuestion()">Next Question</button>
+        <p id="score"></p>
+      </div>
+
+      <!-- Results Display -->
+      <div id="results-container" class="container" style="display: none;">
+        <h3>Exam Results</h3>
+        <p id="student-info-summary"></p>
+        <div id="results"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2023 Statistical Methods Course</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
