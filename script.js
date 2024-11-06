@@ -219,7 +219,7 @@ function displayResults() {
   MathJax.typesetPromise();
 }
 function sendResultsToGoogleSheet(data) {
-  const scriptURL = "https://script.google.com/macros/s/AKfycbzcbL-F8IrhqlPfrqOR7Aeuu6kaiJMe5vHrray8e2txoUq5mjH7g7sBXojYJjtOwtu6iw/exec"; // Replace with the URL from your Apps Script deployment
+  const scriptURL = "https://script.google.com/macros/s/AKfycbz2_jXQk7QYqLPrgnqDH0oD_8YyXSwb81_jU3l3s0G81vQhOOwip4PXF8-KKmlJNla3EA/exec"; // Replace with the URL from your Apps Script deployment
   
   fetch(scriptURL, {
     method: 'POST',
