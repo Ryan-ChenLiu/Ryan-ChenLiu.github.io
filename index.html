@@ -7,7 +7,14 @@
   <link rel="stylesheet" href="style.css">
 
   <!-- MathJax for LaTeX support -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js" integrity="sha512-j1QXnV8a5mx1eKUc7AnlnCA8vO1YQtr6rBx0dSMZ/wgXjFyzSClxdN5nXIp6BqFQBt/6k0Y6XH8gdr9gG6h4Uw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js"></script>
+
+  <!-- Firebase App (the core Firebase SDK) and Firestore -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+  <!-- External JavaScript for Quiz -->
+  <script src="script.js"></script>
 </head>
 <body>
   <header>
@@ -19,6 +26,7 @@
     </nav>
   </header>
 
+  
   <main>
     <!-- Overview Section -->
     <section id="overview">
@@ -88,15 +96,8 @@
   </main>
 
   <footer>
-    <p>&copy; 2023 Statistical Methods Course</p>
+    <p>&copy; 2024 Statistical Methods Course</p>
   </footer>
-
-  <!-- Firebase App (the core Firebase SDK) and Firestore -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-
-  <!-- External JavaScript for Quiz -->
-  <script src="script.js"></script>
 
   <!-- Disable Right-Click and Keyboard Shortcuts -->
   <script>
