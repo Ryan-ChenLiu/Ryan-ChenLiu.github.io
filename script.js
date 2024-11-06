@@ -2,6 +2,9 @@ let currentQuestionIndex = 0;
 let score = 0;
 let studentInfo = { id: "", name: "" };
 let answers = [];
+let startTime = 0;
+let questionStartTime = 0;
+let totalTime = 0;
 
 const questions = [
   {
@@ -39,6 +42,7 @@ function displayQuestion() {
   // ... existing code ...
 
   // Update navigation buttons
+  MathJax.typesetPromise();
   updateNavigationButtons();
 }
 
@@ -75,7 +79,8 @@ function startQuiz(event) {
   event.preventDefault();
   studentInfo.id = document.getElementById("student-id").value;
   studentInfo.name = document.getElementById("student-name").value;
-
+  startTime = Date.now();
+  questionStartTime = Date.now();
   document.getElementById("student-info").style.display = "none";
   document.getElementById("quiz-container").style.display = "block";
 
@@ -86,7 +91,7 @@ function displayQuestion() {
   const questionElement = document.getElementById("question");
   const options = document.querySelectorAll(".option");
   const solutionElement = document.getElementById("solution");
-
+  questionStartTime = Date.now(); // Start timing for the current question
   questionElement.innerText = questions[currentQuestionIndex].question;
   options.forEach((option, index) => {
     option.innerText = questions[currentQuestionIndex].answers[index];
@@ -98,7 +103,9 @@ function displayQuestion() {
 function selectAnswer(answerIndex) {
   const question = questions[currentQuestionIndex];
   const solutionElement = document.getElementById("solution");
-
+  const timeTaken = (Date.now() - questionStartTime) / 1000; // time in seconds
+  answers[currentQuestionIndex].timeTaken = timeTaken;
+  questionStartTime = Date.now(); // Reset for the next question
   const isCorrect = answerIndex === question.correct;
   answers.push({
     question: question.question,
@@ -141,18 +148,33 @@ function nextQuestion() {
   }
 }
 
+
+
+function formatTime(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins} minutes, ${secs} seconds`;
+}
+
+
+
+
 function displayResults() {
   document.getElementById("quiz-container").style.display = "none";
   document.getElementById("results-container").style.display = "block";
-
+  totalTime = (Date.now() - startTime) / 1000; // Total time in seconds
   const summary = `
     <p><strong>Student ID:</strong> ${studentInfo.id}</p>
     <p><strong>Name:</strong> ${studentInfo.name}</p>
     <p><strong>Score:</strong> ${score} / ${questions.length}</p>
+    <p><strong>Total Time Taken:</strong> ${formatTime(totalTime)}</p>
   `;
-
+ 
   document.getElementById("student-info-summary").innerHTML = summary;
-
+  const averageTime = totalTime / questions.length;
+  const statsHTML = `
+    <p><strong>Average Time per Question:</strong> ${formatTime(averageTime)}</p>
+  `;
   let resultsHTML = "";
   answers.forEach((answer, index) => {
     resultsHTML += `
@@ -165,7 +187,7 @@ function displayResults() {
     `;
   });
 
-  document.getElementById("results").innerHTML = resultsHTML;
+  document.getElementById("results").innerHTML = resultsHTML + statsHTML;
 }
 
 document.getElementById("student-info").style.display = "block";
