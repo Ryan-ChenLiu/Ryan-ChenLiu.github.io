@@ -91,7 +91,11 @@
     <p>&copy; 2023 Statistical Methods Course</p>
   </footer>
 
-  <!-- External JavaScript -->
+  <!-- Firebase App (the core Firebase SDK) and Firestore -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+  <!-- External JavaScript for Quiz -->
   <script src="script.js"></script>
 
   <!-- Disable Right-Click and Keyboard Shortcuts -->
@@ -101,7 +105,6 @@
 
     // Disable Keyboard Shortcuts
     document.addEventListener('keydown', function(event) {
-      // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
       if (event.keyCode === 123 || 
           (event.ctrlKey && event.shiftKey && (event.keyCode === 73 || event.keyCode === 74)) || 
           (event.ctrlKey && event.keyCode === 85)) {
@@ -109,10 +112,6 @@
       }
     });
   </script>
-
-  <!-- Firebase App (the core Firebase SDK) -->
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
 </body>
 </html>
