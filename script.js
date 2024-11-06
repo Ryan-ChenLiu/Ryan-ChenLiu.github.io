@@ -164,6 +164,21 @@ function nextQuestion() {
 
 function submitQuiz() {
   displayResults();
+    const resultsData = {
+    studentInfo: studentInfo,
+    score: score,
+    totalTime: totalTime,
+    answers: answers.map((answer, index) => ({
+      questionNumber: index + 1,
+      selectedAnswer: answer.selected,
+      correctAnswer: answer.correct,
+      timeTaken: answer.timeTaken,
+      isCorrect: answer.isCorrect
+    }))
+  };
+
+  // Send the results data to Google Sheets
+  sendResultsToGoogleSheet(resultsData);
 }
 
 function displayResults() {
@@ -202,6 +217,28 @@ function displayResults() {
 
   // Typeset any MathJax expressions
   MathJax.typesetPromise();
+}
+function sendResultsToGoogleSheet(data) {
+  const scriptURL = "https://script.google.com/macros/s/AKfycbzcbL-F8IrhqlPfrqOR7Aeuu6kaiJMe5vHrray8e2txoUq5mjH7g7sBXojYJjtOwtu6iw/exec"; // Replace with the URL from your Apps Script deployment
+  
+  fetch(scriptURL, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => response.json())
+  .then(response => {
+    if (response.status === "success") {
+      console.log("Results stored successfully!");
+    } else {
+      console.error("Error storing results:", response);
+    }
+  })
+  .catch(error => {
+    console.error("Error:", error);
+  });
 }
 
 function formatTime(seconds) {
