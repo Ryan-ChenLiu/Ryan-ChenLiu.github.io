@@ -20,7 +20,7 @@ const questions = [
     question: "What is the variance of the data set: 4, 4, 6, 8?",
     answers: ["2", "4", "5", "3"],
     correct: 0,
-    solution: "Solution: The mean is 5.5, and variance = [(4-5.5)^2 + (4-5.5)^2 + (6-5.5)^2 + (8-5.5)^2] / 4 = 2."
+    solution: "Solution: The mean is calculated as $$\\frac{3 + 7 + 7 + 2 + 9}{5} = 5.6.$$"
   },
   {
     question: "Which distribution is symmetric and bell-shaped?",
