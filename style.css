@@ -21,7 +21,8 @@ h2 {
   color: #333;
 }
 
-#student-info, #quiz-container, #results-container {
+/* Updated rule without #student-info */
+#quiz-container, #results-container {
   display: none;
 }
 
