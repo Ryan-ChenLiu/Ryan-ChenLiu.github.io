@@ -14,7 +14,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
   <!-- External JavaScript for Quiz -->
-  <script src="script.js"></script>
+  <script src="script.js" defer></script>
 </head>
 <body>
   <main>
@@ -42,7 +42,7 @@
         <div id="navigation"></div>
 
         <div id="question-container">
-          <p id="question"></p>
+          <p id="question">Question will appear here</p>
           <div class="options">
             <button class="option" onclick="selectAnswer(0)">Option 1</button>
             <button class="option" onclick="selectAnswer(1)">Option 2</button>
