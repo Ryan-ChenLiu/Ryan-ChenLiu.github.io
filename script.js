@@ -9,6 +9,7 @@ let startTime = 0;
 let questionStartTime = 0;
 let totalTime = 0;
 
+// Define quiz questions
 const questions = [
   {
     question: "What is the mean of the dataset: 3, 7, 7, 2, 9?",
@@ -48,12 +49,20 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+try {
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.firestore();
+  console.log("Firebase initialized successfully.");
+} catch (error) {
+  console.error("Firebase initialization error:", error);
+  alert("Failed to initialize Firebase. Please check console for details.");
+}
 
 // Start quiz and hide the info form
 function startQuiz(event) {
   event.preventDefault();
+  
+  // Collect and sanitize student information
   studentInfo.id = document.getElementById("student-id").value.trim();
   studentInfo.name = document.getElementById("student-name").value.trim();
 
@@ -64,10 +73,10 @@ function startQuiz(event) {
   }
 
   console.log(`Starting quiz for Student ID: ${studentInfo.id}, Name: ${studentInfo.name}`);
-  
+
   startTime = Date.now();
   questionStartTime = Date.now();
-  
+
   // Store student info in Firestore
   db.collection("students").add({
     studentId: studentInfo.id,
@@ -87,7 +96,7 @@ function startQuiz(event) {
   });
 }
 
-// Display question
+// Display the current question
 function displayQuestion() {
   const questionElement = document.getElementById("question");
   const options = document.querySelectorAll(".option");
@@ -142,17 +151,18 @@ function selectAnswer(answerIndex) {
   }
 
   disableOptions();
+  updateNavigationButtons();
   MathJax.typesetPromise();
 }
 
-// Disable options
+// Disable answer buttons after selection
 function disableOptions() {
   document.querySelectorAll(".option").forEach(option => {
     option.disabled = true;
   });
 }
 
-// Enable options
+// Enable answer buttons for the next question
 function enableOptions() {
   document.querySelectorAll(".option").forEach(option => {
     option.disabled = false;
@@ -160,7 +170,7 @@ function enableOptions() {
   });
 }
 
-// Navigate to question
+// Navigate to a specific question
 function goToQuestion(index) {
   currentQuestionIndex = index;
   displayQuestion();
@@ -170,12 +180,15 @@ function goToQuestion(index) {
     const selectedIndex = questions[currentQuestionIndex].answers.indexOf(selectedAnswer);
     const isCorrect = answers[currentQuestionIndex].isCorrect;
     document.querySelectorAll(".option")[selectedIndex].style.backgroundColor = isCorrect ? "#2ecc71" : "#e74c3c";
+    if (!isCorrect) {
+      document.querySelectorAll(".option")[questions[currentQuestionIndex].correct].style.backgroundColor = "#2ecc71";
+    }
     document.getElementById("solution").innerHTML = (isCorrect ? "Correct! " : "Incorrect. ") + answers[currentQuestionIndex].explanation;
     disableOptions();
   }
 }
 
-// Update navigation buttons
+// Update navigation buttons to reflect answered questions
 function updateNavigationButtons() {
   const navigationContainer = document.getElementById("navigation");
   navigationContainer.innerHTML = "";
@@ -202,7 +215,7 @@ function updateNavigationButtons() {
   });
 }
 
-// Go to next question
+// Proceed to the next question
 function nextQuestion() {
   currentQuestionIndex++;
   if (currentQuestionIndex < questions.length) {
@@ -239,7 +252,7 @@ function submitQuiz() {
   saveResultsToFirestore(resultsData);
 }
 
-// Display results
+// Display quiz results to the user
 function displayResults() {
   document.getElementById("quiz-container").style.display = "none";
   document.getElementById("results-container").style.display = "block";
@@ -270,19 +283,20 @@ function displayResults() {
   MathJax.typesetPromise();
 }
 
-// Format time in minutes and seconds
+// Format time from seconds to minutes and seconds
 function formatTime(seconds) {
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
   return `${mins} minutes, ${secs} seconds`;
 }
 
-// Save results to Firebase Firestore
+// Save quiz results to Firebase Firestore
 function saveResultsToFirestore(data) {
   db.collection("quizResults").add(data)
     .then((docRef) => {
       console.log("Quiz results successfully written with ID: ", docRef.id);
-      // Optionally, you can inform the user that their results have been saved
+      // Optionally, inform the user that their results have been saved
+      // alert("Your results have been submitted successfully!");
     })
     .catch((error) => {
       console.error("Error adding quiz results: ", error);
@@ -290,7 +304,7 @@ function saveResultsToFirestore(data) {
     });
 }
 
-// Initially display the student info form
+// Ensure student-info is visible on page load
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById('student-info').style.display = 'block';
 });
