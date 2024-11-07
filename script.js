@@ -36,13 +36,13 @@ const questions = [
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
-  measurementId: "YOUR_MEASUREMENT_ID"
+apiKey: "AIzaSyB74rDbZl3GnXSP_nyhdvIE-v3hSbNUzPM",
+  authDomain: "exam-results-accfin2018.firebaseapp.com",
+  projectId: "exam-results-accfin2018",
+  storageBucket: "exam-results-accfin2018.firebasestorage.app",
+  messagingSenderId: "162880978689",
+  appId: "1:162880978689:web:723507aafc6d79c5586500",
+  measurementId: "G-R8N43LVZE8"
 };
 
 // // Initialize Firebase
