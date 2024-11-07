@@ -243,4 +243,5 @@ function saveResultsToFirestore(data) {
 }
 
 // Initially display the student info form
-document.getElementById("student-info").style.display = "block";
+// Ensure student-info is visible on page load
+document.getElementById('student-info').style.display = 'block';
