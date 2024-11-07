@@ -58,6 +58,31 @@
 
         <p id="score"></p>
       </div>
+     <!-- Authentication Forms -->
+<div id="auth-container" class="container">
+  <h3>Sign In</h3>
+  <form id="sign-in-form" onsubmit="signIn(event)">
+    <label for="sign-in-email">Email:</label>
+    <input type="email" id="sign-in-email" required><br><br>
+    <label for="sign-in-password">Password:</label>
+    <input type="password" id="sign-in-password" required><br><br>
+    <button type="submit">Sign In</button>
+  </form>
+  <p>Don't have an account? <a href="#" onclick="showSignUp()">Sign Up</a></p>
+</div>
+
+<!-- Sign-Up Form (hidden by default) -->
+<div id="sign-up-container" class="container" style="display: none;">
+  <h3>Sign Up</h3>
+  <form id="sign-up-form" onsubmit="signUp(event)">
+    <label for="sign-up-email">Email:</label>
+    <input type="email" id="sign-up-email" required><br><br>
+    <label for="sign-up-password">Password:</label>
+    <input type="password" id="sign-up-password" required><br><br>
+    <button type="submit">Sign Up</button>
+  </form>
+  <p>Already have an account? <a href="#" onclick="showSignIn()">Sign In</a></p>
+</div>
 
       <!-- Results Display -->
       <div id="results-container" class="container" style="display: none;">
