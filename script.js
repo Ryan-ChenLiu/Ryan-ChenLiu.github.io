@@ -66,9 +66,12 @@ function startQuiz(event) {
   studentInfo.id = document.getElementById("student-id").value.trim();
   studentInfo.name = document.getElementById("student-name").value.trim();
 
+  console.log(`Collected Student ID: '${studentInfo.id}', Name: '${studentInfo.name}'`);
+
   // Basic validation
   if (studentInfo.id === "" || studentInfo.name === "") {
     alert("Please enter both Student ID and Name.");
+    console.warn("Validation failed: Empty Student ID or Name.");
     return;
   }
 
@@ -306,5 +309,10 @@ function saveResultsToFirestore(data) {
 
 // Ensure student-info is visible on page load
 document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById('student-info').style.display = 'block';
+  const studentInfoDiv = document.getElementById('student-info');
+  if (studentInfoDiv) {
+    studentInfoDiv.style.display = 'block';
+  } else {
+    console.error("Element with ID 'student-info' not found.");
+  }
 });
