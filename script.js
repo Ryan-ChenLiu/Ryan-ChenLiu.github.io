@@ -62,6 +62,14 @@ try {
 function startQuiz(event) {
   event.preventDefault();
   
+  // Get current user
+  const user = firebase.auth().currentUser;
+  
+  if (!user) {
+    alert("You must be signed in to start the quiz.");
+    return;
+  }
+  
   // Collect and sanitize student information
   studentInfo.id = document.getElementById("student-id").value.trim();
   studentInfo.name = document.getElementById("student-name").value.trim();
@@ -89,15 +97,24 @@ function startQuiz(event) {
   .then((docRef) => {
     console.log("Student info successfully written with ID: ", docRef.id);
     // Hide the student info form and show the quiz
-    document.getElementById("student-info").style.display = "none";
-    document.getElementById("quiz-container").style.display = "block";
-    displayQuestion();
+    const studentInfoDiv = document.getElementById("student-info");
+    const quizContainer = document.getElementById("quiz-container");
+    
+    if (studentInfoDiv && quizContainer) {
+      studentInfoDiv.style.display = "none";
+      quizContainer.style.display = "block";
+      displayQuestion();
+    } else {
+      console.error("Failed to find necessary HTML elements.");
+      alert("An unexpected error occurred. Please try again.");
+    }
   })
   .catch((error) => {
     console.error("Error adding student info: ", error);
     alert("There was an error starting the quiz. Please try again.");
   });
 }
+
 
 // Display the current question
 function displayQuestion() {
@@ -164,6 +181,75 @@ function disableOptions() {
     option.disabled = true;
   });
 }
+// Sign-Up Function
+function signUp(event) {
+  event.preventDefault();
+  
+  const email = document.getElementById("sign-up-email").value.trim();
+  const password = document.getElementById("sign-up-password").value.trim();
+  
+  firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      console.log("User signed up:", userCredential.user);
+      alert("Sign-up successful! You can now sign in.");
+      // Hide Sign-Up Form and show Sign-In Form
+      document.getElementById("sign-up-container").style.display = "none";
+      document.getElementById("auth-container").style.display = "block";
+    })
+    .catch((error) => {
+      console.error("Error signing up:", error);
+      alert(`Sign-up failed: ${error.message}`);
+    });
+}
+
+// Sign-In Function
+function signIn(event) {
+  event.preventDefault();
+  
+  const email = document.getElementById("sign-in-email").value.trim();
+  const password = document.getElementById("sign-in-password").value.trim();
+  
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      console.log("User signed in:", userCredential.user);
+      // Hide Auth Container and show Student Info Form
+      document.getElementById("auth-container").style.display = "none";
+      document.getElementById("student-info").style.display = "block";
+    })
+    .catch((error) => {
+      console.error("Error signing in:", error);
+      alert(`Sign-in failed: ${error.message}`);
+    });
+}
+
+// Show Sign-Up Form
+function showSignUp() {
+  document.getElementById("auth-container").style.display = "none";
+  document.getElementById("sign-up-container").style.display = "block";
+}
+
+// Show Sign-In Form
+function showSignIn() {
+  document.getElementById("sign-up-container").style.display = "none";
+  document.getElementById("auth-container").style.display = "block";
+}
+
+// Listen for Authentication State Changes
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    console.log("User is signed in:", user);
+    // If user is already signed in, show the Student Info Form
+    document.getElementById("auth-container").style.display = "none";
+    document.getElementById("sign-up-container").style.display = "none";
+    document.getElementById("student-info").style.display = "block";
+  } else {
+    console.log("No user is signed in.");
+    // Show Auth Container if no user is signed in
+    document.getElementById("auth-container").style.display = "block";
+    document.getElementById("sign-up-container").style.display = "none";
+    document.getElementById("student-info").style.display = "none";
+  }
+});
 
 // Enable answer buttons for the next question
 function enableOptions() {
