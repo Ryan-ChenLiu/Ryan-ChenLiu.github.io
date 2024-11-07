@@ -1,3 +1,5 @@
+// script.js
+
 // Initialize quiz variables
 let currentQuestionIndex = 0;
 let score = 0;
@@ -36,7 +38,7 @@ const questions = [
 
 // Firebase configuration
 const firebaseConfig = {
-apiKey: "AIzaSyB74rDbZl3GnXSP_nyhdvIE-v3hSbNUzPM",
+  apiKey: "AIzaSyB74rDbZl3GnXSP_nyhdvIE-v3hSbNUzPM",
   authDomain: "exam-results-accfin2018.firebaseapp.com",
   projectId: "exam-results-accfin2018",
   storageBucket: "exam-results-accfin2018.firebasestorage.app",
@@ -45,20 +47,44 @@ apiKey: "AIzaSyB74rDbZl3GnXSP_nyhdvIE-v3hSbNUzPM",
   measurementId: "G-R8N43LVZE8"
 };
 
-// // Initialize Firebase
-// const app = firebase.initializeApp(firebaseConfig);
-// const db = firebase.firestore();
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
 // Start quiz and hide the info form
 function startQuiz(event) {
   event.preventDefault();
-  studentInfo.id = document.getElementById("student-id").value;
-  studentInfo.name = document.getElementById("student-name").value;
+  studentInfo.id = document.getElementById("student-id").value.trim();
+  studentInfo.name = document.getElementById("student-name").value.trim();
+
+  // Basic validation
+  if (studentInfo.id === "" || studentInfo.name === "") {
+    alert("Please enter both Student ID and Name.");
+    return;
+  }
+
+  console.log(`Starting quiz for Student ID: ${studentInfo.id}, Name: ${studentInfo.name}`);
+  
   startTime = Date.now();
   questionStartTime = Date.now();
-  document.getElementById("student-info").style.display = "none";
-  document.getElementById("quiz-container").style.display = "block";
-  displayQuestion();
+  
+  // Store student info in Firestore
+  db.collection("students").add({
+    studentId: studentInfo.id,
+    studentName: studentInfo.name,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+  })
+  .then((docRef) => {
+    console.log("Student info successfully written with ID: ", docRef.id);
+    // Hide the student info form and show the quiz
+    document.getElementById("student-info").style.display = "none";
+    document.getElementById("quiz-container").style.display = "block";
+    displayQuestion();
+  })
+  .catch((error) => {
+    console.error("Error adding student info: ", error);
+    alert("There was an error starting the quiz. Please try again.");
+  });
 }
 
 // Display question
@@ -92,6 +118,8 @@ function selectAnswer(answerIndex) {
   const timeTaken = (Date.now() - questionStartTime) / 1000; // time in seconds
   const isCorrect = answerIndex === question.correct;
 
+  console.log(`Question ${currentQuestionIndex + 1}: Selected option ${answerIndex} (${question.answers[answerIndex]}) - ${isCorrect ? "Correct" : "Incorrect"}`);
+
   // Store the user's answer
   answers[currentQuestionIndex] = {
     question: question.question,
@@ -109,6 +137,8 @@ function selectAnswer(answerIndex) {
   } else {
     solutionElement.innerHTML = "Incorrect. " + question.solution;
     document.querySelectorAll(".option")[answerIndex].style.backgroundColor = "#e74c3c";
+    // Highlight the correct answer
+    document.querySelectorAll(".option")[question.correct].style.backgroundColor = "#2ecc71";
   }
 
   disableOptions();
@@ -154,7 +184,20 @@ function updateNavigationButtons() {
     const navButton = document.createElement("button");
     navButton.innerText = index + 1;
     navButton.onclick = () => goToQuestion(index);
-    navButton.style.backgroundColor = answers[index] ? (answers[index].isCorrect ? "#2ecc71" : "#e74c3c") : "#ddd";
+    navButton.style.margin = "2px";
+    navButton.style.padding = "5px 10px";
+    navButton.style.border = "none";
+    navButton.style.borderRadius = "4px";
+    navButton.style.cursor = "pointer";
+
+    if (answers[index]) {
+      navButton.style.backgroundColor = answers[index].isCorrect ? "#2ecc71" : "#e74c3c";
+      navButton.style.color = "#fff";
+    } else {
+      navButton.style.backgroundColor = "#ddd";
+      navButton.style.color = "#000";
+    }
+
     navigationContainer.appendChild(navButton);
   });
 }
@@ -186,8 +229,11 @@ function submitQuiz() {
       correctAnswer: answer.correct,
       timeTaken: answer.timeTaken,
       isCorrect: answer.isCorrect
-    }))
+    })),
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
   };
+
+  console.log("Submitting quiz results:", resultsData);
 
   // Save results to Firebase Firestore
   saveResultsToFirestore(resultsData);
@@ -234,14 +280,17 @@ function formatTime(seconds) {
 // Save results to Firebase Firestore
 function saveResultsToFirestore(data) {
   db.collection("quizResults").add(data)
-    .then(() => {
-      console.log("Results stored successfully!");
+    .then((docRef) => {
+      console.log("Quiz results successfully written with ID: ", docRef.id);
+      // Optionally, you can inform the user that their results have been saved
     })
     .catch((error) => {
-      console.error("Error storing results: ", error);
+      console.error("Error adding quiz results: ", error);
+      alert("There was an error submitting your quiz results. Please try again.");
     });
 }
 
 // Initially display the student info form
-// Ensure student-info is visible on page load
-document.getElementById('student-info').style.display = 'block';
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById('student-info').style.display = 'block';
+});
