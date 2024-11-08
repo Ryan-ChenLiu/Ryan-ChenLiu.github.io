@@ -11,6 +11,9 @@ const firebaseConfig = {
   appId: "1:162880978689:web:723507aafc6d79c5586500",
   measurementId: "G-R8N43LVZE8"
 };
+// script.js
+
+
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
@@ -73,13 +76,10 @@ function authenticateStudent(event) {
 
   console.log(`Authenticating Student ID: ${studentID}, Name: ${studentName}`);
 
-  // Query the authorizedStudents collection
-  db.collection("authorizedStudents")
-    .where("studentID", "==", studentID)
-    .where("studentName", "==", studentName)
-    .get()
-    .then((querySnapshot) => {
-      if (!querySnapshot.empty) {
+  // Fetch the authorized student document by studentID
+  db.collection("authorizedStudents").doc(studentID).get()
+    .then((doc) => {
+      if (doc.exists && doc.data().studentName === studentName) {
         // Authorized
         console.log("Student is authorized.");
         studentInfo.id = studentID;
