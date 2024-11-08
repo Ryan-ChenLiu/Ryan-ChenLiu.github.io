@@ -1,5 +1,22 @@
 // script.js
 
+// Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyB74rDbZl3GnXSP_nyhdvIE-v3hSbNUzPM",
+  authDomain: "exam-results-accfin2018.firebaseapp.com",
+  projectId: "exam-results-accfin2018",
+  storageBucket: "exam-results-accfin2018.firebasestorage.app",
+  messagingSenderId: "162880978689",
+  appId: "1:162880978689:web:723507aafc6d79c5586500",
+  measurementId: "G-R8N43LVZE8"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+console.log("Firebase initialized successfully.");
+
 // Initialize quiz variables
 let currentQuestionIndex = 0;
 let score = 0;
@@ -37,84 +54,64 @@ const questions = [
   }
 ];
 
-// Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyB74rDbZl3GnXSP_nyhdvIE-v3hSbNUzPM",
-  authDomain: "exam-results-accfin2018.firebaseapp.com",
-  projectId: "exam-results-accfin2018",
-  storageBucket: "exam-results-accfin2018.firebasestorage.app",
-  messagingSenderId: "162880978689",
-  appId: "1:162880978689:web:723507aafc6d79c5586500",
-  measurementId: "G-R8N43LVZE8"
-};
-
-// Initialize Firebase
-try {
-  firebase.initializeApp(firebaseConfig);
-  var db = firebase.firestore();
-  console.log("Firebase initialized successfully.");
-} catch (error) {
-  console.error("Firebase initialization error:", error);
-  alert("Failed to initialize Firebase. Please check console for details.");
-}
-
-// Start quiz and hide the info form
-function startQuiz(event) {
+// Authenticate Student Function
+function authenticateStudent(event) {
   event.preventDefault();
-  
-  // Get current user
-  const user = firebase.auth().currentUser;
-  
-  if (!user) {
-    alert("You must be signed in to start the quiz.");
-    return;
-  }
-  
-  // Collect and sanitize student information
-  studentInfo.id = document.getElementById("student-id").value.trim();
-  studentInfo.name = document.getElementById("student-name").value.trim();
 
-  console.log(`Collected Student ID: '${studentInfo.id}', Name: '${studentInfo.name}'`);
+  const studentID = document.getElementById("student-id").value.trim();
+  const studentName = document.getElementById("student-name").value.trim();
+  const authError = document.getElementById("auth-error");
+
+  // Clear previous error messages
+  authError.innerText = "";
 
   // Basic validation
-  if (studentInfo.id === "" || studentInfo.name === "") {
-    alert("Please enter both Student ID and Name.");
-    console.warn("Validation failed: Empty Student ID or Name.");
+  if (studentID === "" || studentName === "") {
+    authError.innerText = "Please enter both Student ID and Name.";
     return;
   }
 
-  console.log(`Starting quiz for Student ID: ${studentInfo.id}, Name: ${studentInfo.name}`);
+  console.log(`Authenticating Student ID: ${studentID}, Name: ${studentName}`);
 
+  // Query the authorizedStudents collection
+  db.collection("authorizedStudents")
+    .where("studentID", "==", studentID)
+    .where("studentName", "==", studentName)
+    .get()
+    .then((querySnapshot) => {
+      if (!querySnapshot.empty) {
+        // Authorized
+        console.log("Student is authorized.");
+        studentInfo.id = studentID;
+        studentInfo.name = studentName;
+        startQuiz();
+      } else {
+        // Not authorized
+        console.warn("Student ID and Name not found in authorized list.");
+        authError.innerText = "Your Student ID and Name are not authorized to take the quiz.";
+      }
+    })
+    .catch((error) => {
+      console.error("Error querying authorizedStudents:", error);
+      authError.innerText = "An error occurred during authentication. Please try again.";
+    });
+}
+
+// Start Quiz Function
+function startQuiz() {
+  // Hide the authentication form and show the quiz section
+  document.getElementById("authentication").style.display = "none";
+  document.getElementById("quiz-section").style.display = "block";
+
+  // Initialize quiz variables
+  currentQuestionIndex = 0;
+  score = 0;
+  answers = [];
   startTime = Date.now();
   questionStartTime = Date.now();
 
-  // Store student info in Firestore
-  db.collection("students").add({
-    studentId: studentInfo.id,
-    studentName: studentInfo.name,
-    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-  })
-  .then((docRef) => {
-    console.log("Student info successfully written with ID: ", docRef.id);
-    // Hide the student info form and show the quiz
-    const studentInfoDiv = document.getElementById("student-info");
-    const quizContainer = document.getElementById("quiz-container");
-    
-    if (studentInfoDiv && quizContainer) {
-      studentInfoDiv.style.display = "none";
-      quizContainer.style.display = "block";
-      displayQuestion();
-    } else {
-      console.error("Failed to find necessary HTML elements.");
-      alert("An unexpected error occurred. Please try again.");
-    }
-  })
-  .catch((error) => {
-    console.error("Error adding student info: ", error);
-    alert("There was an error starting the quiz. Please try again.");
-  });
+  displayQuestion();
 }
-
 
 // Display the current question
 function displayQuestion() {
@@ -181,75 +178,6 @@ function disableOptions() {
     option.disabled = true;
   });
 }
-// Sign-Up Function
-function signUp(event) {
-  event.preventDefault();
-  
-  const email = document.getElementById("sign-up-email").value.trim();
-  const password = document.getElementById("sign-up-password").value.trim();
-  
-  firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      console.log("User signed up:", userCredential.user);
-      alert("Sign-up successful! You can now sign in.");
-      // Hide Sign-Up Form and show Sign-In Form
-      document.getElementById("sign-up-container").style.display = "none";
-      document.getElementById("auth-container").style.display = "block";
-    })
-    .catch((error) => {
-      console.error("Error signing up:", error);
-      alert(`Sign-up failed: ${error.message}`);
-    });
-}
-
-// Sign-In Function
-function signIn(event) {
-  event.preventDefault();
-  
-  const email = document.getElementById("sign-in-email").value.trim();
-  const password = document.getElementById("sign-in-password").value.trim();
-  
-  firebase.auth().signInWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      console.log("User signed in:", userCredential.user);
-      // Hide Auth Container and show Student Info Form
-      document.getElementById("auth-container").style.display = "none";
-      document.getElementById("student-info").style.display = "block";
-    })
-    .catch((error) => {
-      console.error("Error signing in:", error);
-      alert(`Sign-in failed: ${error.message}`);
-    });
-}
-
-// Show Sign-Up Form
-function showSignUp() {
-  document.getElementById("auth-container").style.display = "none";
-  document.getElementById("sign-up-container").style.display = "block";
-}
-
-// Show Sign-In Form
-function showSignIn() {
-  document.getElementById("sign-up-container").style.display = "none";
-  document.getElementById("auth-container").style.display = "block";
-}
-
-// Listen for Authentication State Changes
-firebase.auth().onAuthStateChanged((user) => {
-  if (user) {
-    console.log("User is signed in:", user);
-    // If user is already signed in, show the Student Info Form
-    document.getElementById("auth-container").style.display = "none";
-    document.getElementById("sign-up-container").style.display = "none";
-    document.getElementById("student-info").style.display = "block";
-  } else {
-    console.log("No user is signed in.");
-    // Show Auth Container if no user is signed in
-    document.getElementById("auth-container").style.display = "block";
-    document.getElementById("sign-up-container").style.display = "none";
-    document.getElementById("student-info").style.display = "none";
-  }
-});
 
 // Enable answer buttons for the next question
 function enableOptions() {
@@ -392,13 +320,3 @@ function saveResultsToFirestore(data) {
       alert("There was an error submitting your quiz results. Please try again.");
     });
 }
-
-// Ensure student-info is visible on page load
-document.addEventListener("DOMContentLoaded", () => {
-  const studentInfoDiv = document.getElementById('student-info');
-  if (studentInfoDiv) {
-    studentInfoDiv.style.display = 'block';
-  } else {
-    console.error("Element with ID 'student-info' not found.");
-  }
-});
