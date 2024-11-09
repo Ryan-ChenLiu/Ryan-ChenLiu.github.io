@@ -1,91 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Statistical Methods Quiz</title>
-  <link rel="stylesheet" href="style.css">
-
-  <!-- MathJax for LaTeX support -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js"></script>
-
-  <!-- Firebase App (the core Firebase SDK) -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <!-- Firebase Firestore -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-
-  <!-- External JavaScript for Quiz -->
-  <script src="script.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. [Your Name] - Academic Profile</title>
+    <!-- Link to the CSS file -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <main>
-    <!-- Authentication Section -->
-    <section id="authentication" class="container">
-      <h2>Welcome to the Statistical Methods Quiz</h2>
-
-      <!-- Student Authentication Form -->
-      <div id="auth-container">
-        <h3>Enter Your Information</h3>
-        <form id="auth-form" onsubmit="authenticateStudent(event)">
-          <label for="student-id">Student ID:</label><br>
-          <input type="text" id="student-id" required><br><br>
-          <label for="student-name">Name:</label><br>
-          <input type="text" id="student-name" required><br><br>
-          <button type="submit">Start Quiz</button>
-        </form>
-        <p id="auth-error" style="color: red;"></p>
-      </div>
-    </section>
-
-    <!-- Quiz Section (hidden by default) -->
-    <section id="quiz-section">
-      <div id="quiz-container" class="container">
-        <h2>Statistical Methods Quiz</h2>
-        <h3>Quiz</h3>
-
-        <!-- Navigation for Questions -->
-        <div id="navigation"></div>
-
-        <div id="question-container">
-          <p id="question">Question will appear here</p>
-          <div class="options">
-            <button class="option" onclick="selectAnswer(0)">Option 1</button>
-            <button class="option" onclick="selectAnswer(1)">Option 2</button>
-            <button class="option" onclick="selectAnswer(2)">Option 3</button>
-            <button class="option" onclick="selectAnswer(3)">Option 4</button>
-          </div>
-          <p id="solution"></p>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <h1>Dr. [Your Name]</h1>
+            <nav>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#research">Research</a></li>
+                    <li><a href="#publications">Publications</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#" id="toggle-theme">Toggle Theme</a></li>
+                </ul>
+            </nav>
         </div>
-        
-        <!-- Navigation Buttons -->
-        <button id="next-btn" onclick="nextQuestion()">Next Question</button>
-        <button id="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+    </header>
 
-        <p id="score"></p>
-      </div>
+    <!-- Live Clock Gadget -->
+    <div class="clock-container">
+        <div id="clock">Loading Clock...</div>
+    </div>
 
-      <!-- Results Display -->
-      <div id="results-container" class="container">
-        <h3>Exam Results</h3>
-        <p id="student-info-summary"></p>
-        <div id="results"></div>
-      </div>
-    </section>
-  </main>
+    <!-- Main Content Section -->
+    <main>
+        <!-- About Section -->
+        <section id="about">
+            <div class="container">
+                <h2>About Me</h2>
+                <p>
+                    [Write a brief introduction about your academic background, research interests, and achievements.]
+                </p>
+            </div>
+        </section>
 
-  <!-- Disable Right-Click and Keyboard Shortcuts -->
-  <script>
-    // Disable Right-Click
-    document.addEventListener('contextmenu', event => event.preventDefault());
+        <!-- Research Section -->
+        <section id="research">
+            <div class="container">
+                <h2>Research</h2>
+                <p>
+                    [Describe your research areas, ongoing projects, and any notable contributions to your field.]
+                </p>
+            </div>
+        </section>
 
-    // Disable Keyboard Shortcuts
-    document.addEventListener('keydown', function(event) {
-      if (event.keyCode === 123 || 
-          (event.ctrlKey && event.shiftKey && (event.keyCode === 73 || event.keyCode === 74)) || 
-          (event.ctrlKey && event.keyCode === 85)) {
-        event.preventDefault();
-      }
-    });
-  </script>
+        <!-- Publications Section -->
+        <section id="publications">
+            <div class="container">
+                <h2>Publications</h2>
+                <ul>
+                    <li><strong>Paper Title 1</strong> - Journal Name, Year.</li>
+                    <li><strong>Paper Title 2</strong> - Conference Name, Year.</li>
+                    <li><strong>Paper Title 3</strong> - Journal Name, Year.</li>
+                    <!-- Add more publications as needed -->
+                </ul>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects">
+            <div class="container">
+                <h2>Projects</h2>
+                <div class="projects-grid">
+                    <div class="project">
+                        <h3>Project One</h3>
+                        <p>Description of project one.</p>
+                        <a href="https://github.com/yourusername/project-one" target="_blank">View on GitHub</a>
+                    </div>
+                    <div class="project">
+                        <h3>Project Two</h3>
+                        <p>Description of project two.</p>
+                        <a href="https://github.com/yourusername/project-two" target="_blank">View on GitHub</a>
+                    </div>
+                    <div class="project">
+                        <h3>Project Three</h3>
+                        <p>Description of project three.</p>
+                        <a href="https://github.com/yourusername/project-three" target="_blank">View on GitHub</a>
+                    </div>
+                    <!-- Add more projects as needed -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <div class="container">
+                <h2>Contact Me</h2>
+                <form id="contact-form">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" required></textarea>
+
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Dr. [Your Name]. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Link to the JavaScript file -->
+    <script src="script.js"></script>
 </body>
 </html>
