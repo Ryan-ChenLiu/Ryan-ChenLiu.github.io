@@ -20,16 +20,16 @@
 <body>
   <main>
     <!-- Authentication Section -->
-    <section id="authentication">
+    <section id="authentication" class="container">
       <h2>Welcome to the Statistical Methods Quiz</h2>
 
       <!-- Student Authentication Form -->
-      <div id="auth-container" class="container">
+      <div id="auth-container">
         <h3>Enter Your Information</h3>
         <form id="auth-form" onsubmit="authenticateStudent(event)">
-          <label for="student-id">Student ID:</label>
+          <label for="student-id">Student ID:</label><br>
           <input type="text" id="student-id" required><br><br>
-          <label for="student-name">Name:</label>
+          <label for="student-name">Name:</label><br>
           <input type="text" id="student-name" required><br><br>
           <button type="submit">Start Quiz</button>
         </form>
@@ -38,15 +38,13 @@
     </section>
 
     <!-- Quiz Section (hidden by default) -->
-    <section id="quiz-section" style="display: none;">
-      <h2>Statistical Methods Quiz</h2>
-
-      <!-- Quiz Questions and Answers -->
+    <section id="quiz-section">
       <div id="quiz-container" class="container">
+        <h2>Statistical Methods Quiz</h2>
         <h3>Quiz</h3>
 
         <!-- Navigation for Questions -->
-        <div id="navigation" style="margin-bottom: 20px;"></div>
+        <div id="navigation"></div>
 
         <div id="question-container">
           <p id="question">Question will appear here</p>
@@ -60,14 +58,14 @@
         </div>
         
         <!-- Navigation Buttons -->
-        <button id="next-btn" onclick="nextQuestion()" style="margin-top: 20px;">Next Question</button>
-        <button id="submit-btn" onclick="submitQuiz()" style="display: none; margin-top: 20px;">Submit Quiz</button>
+        <button id="next-btn" onclick="nextQuestion()">Next Question</button>
+        <button id="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
 
         <p id="score"></p>
       </div>
 
       <!-- Results Display -->
-      <div id="results-container" class="container" style="display: none;">
+      <div id="results-container" class="container">
         <h3>Exam Results</h3>
         <p id="student-info-summary"></p>
         <div id="results"></div>
