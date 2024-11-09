@@ -1,7 +1,6 @@
 // script.js
 
 // Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyB74rDbZl3GnXSP_nyhdvIE-v3hSbNUzPM",
   authDomain: "exam-results-accfin2018.firebaseapp.com",
@@ -96,7 +95,7 @@ function authenticateStudent(event) {
 
 // Start Quiz Function
 function startQuiz() {
-  // Hide the authentication section and show the quiz section
+  // Hide the authentication form and show the quiz section
   document.getElementById("authentication").style.display = "none";
   document.getElementById("quiz-section").style.display = "block";
 
@@ -239,7 +238,8 @@ function submitQuiz() {
   totalTime = (Date.now() - startTime) / 1000; // Total time in seconds
 
   const resultsData = {
-    studentInfo: studentInfo,
+    studentId: studentInfo.id,             // Ensure this matches the document ID in authorizedStudents
+    studentName: studentInfo.name,         // The name used for verification
     score: score,
     totalTime: totalTime,
     answers: answers.map((answer, index) => ({
@@ -298,6 +298,13 @@ function formatTime(seconds) {
 
 // Save quiz results to Firebase Firestore
 function saveResultsToFirestore(data) {
+  // Validate data before submission
+  if (!validateQuizResults(data)) {
+    console.error("Invalid quiz results data:", data);
+    alert("There was an issue with your quiz results. Please try again.");
+    return;
+  }
+
   db.collection("quizResults").add(data)
     .then((docRef) => {
       console.log("Quiz results successfully written with ID: ", docRef.id);
@@ -308,4 +315,22 @@ function saveResultsToFirestore(data) {
       console.error("Error adding quiz results: ", error);
       alert("There was an error submitting your quiz results. Please try again.");
     });
+}
+
+// Function to validate quiz results data
+function validateQuizResults(data) {
+  if (!data.studentId || !data.studentName) {
+    return false;
+  }
+
+  if (typeof data.score !== 'number' || typeof data.totalTime !== 'number') {
+    return false;
+  }
+
+  if (!Array.isArray(data.answers)) {
+    return false;
+  }
+
+  // Additional validations can be added here
+  return true;
 }
