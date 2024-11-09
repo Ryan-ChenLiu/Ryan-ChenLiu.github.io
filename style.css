@@ -1,38 +1,60 @@
+/* =========================
+   General Styles
+========================= */
 body {
   font-family: Arial, sans-serif;
+  font-size: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   background-color: #f4f4f4;
   margin: 0;
 }
 
+h2 {
+  color: #333;
+  font-size: 2rem;
+}
+
+p, label {
+  font-size: 1rem;
+  color: #555;
+}
+
+/* =========================
+   Container Styles
+========================= */
 .container {
   text-align: center;
   max-width: 500px;
+  width: 90%;
   padding: 20px;
   background: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
+  margin-bottom: 20px;
 }
 
-h2 {
-  color: #333;
-}
-
-/* Updated rule without #student-info */
-#quiz-container, #results-container {
+#quiz-section, #results-container {
   display: none;
 }
 
+/* =========================
+   Form Elements
+========================= */
 input[type="text"] {
   width: 80%;
   padding: 10px;
   margin: 5px 0;
   box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
+/* =========================
+   Button Styles
+========================= */
 button {
   padding: 10px 20px;
   background-color: #2ecc71;
@@ -40,28 +62,116 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
   background-color: #27ae60;
+  transform: scale(1.05);
+}
+
+button:focus {
+  outline: 3px solid #2980b9;
+  outline-offset: 2px;
 }
 
 .option {
   margin: 5px 0;
   padding: 10px;
+  width: 100%;
   background-color: #3498db;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .option:hover {
   background-color: #2980b9;
+  transform: scale(1.02);
 }
 
+.option:focus {
+  outline: 3px solid #2980b9;
+  outline-offset: 2px;
+}
+
+/* =========================
+   Navigation Buttons
+========================= */
+#navigation {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.nav-button {
+  margin: 2px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #ddd;
+  color: #000;
+  transition: background-color 0.3s ease;
+}
+
+.nav-button:hover {
+  background-color: #ccc;
+}
+
+.nav-button.answered-correct {
+  background-color: #2ecc71;
+  color: #fff;
+}
+
+.nav-button.answered-incorrect {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+/* =========================
+   Feedback Sections
+========================= */
 #solution, #results {
   margin-top: 20px;
   font-style: italic;
   color: #555;
+}
+
+/* =========================
+   Responsive Design
+========================= */
+@media (max-width: 600px) {
+  .container {
+    max-width: 90%;
+    padding: 15px;
+  }
+
+  button, .option {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+  }
+}
+
+/* =========================
+   Additional Styles
+========================= */
+#submit-btn {
+  background-color: #2980b9;
+}
+
+#submit-btn:hover {
+  background-color: #1c5980;
+}
+
+#next-btn {
+  background-color: #2980b9;
+}
+
+#next-btn:hover {
+  background-color: #1c5980;
 }
