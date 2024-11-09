@@ -11,9 +11,6 @@ const firebaseConfig = {
   appId: "1:162880978689:web:723507aafc6d79c5586500",
   measurementId: "G-R8N43LVZE8"
 };
-// script.js
-
-
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
@@ -99,7 +96,7 @@ function authenticateStudent(event) {
 
 // Start Quiz Function
 function startQuiz() {
-  // Hide the authentication form and show the quiz section
+  // Hide the authentication section and show the quiz section
   document.getElementById("authentication").style.display = "none";
   document.getElementById("quiz-section").style.display = "block";
 
@@ -213,19 +210,11 @@ function updateNavigationButtons() {
   questions.forEach((_, index) => {
     const navButton = document.createElement("button");
     navButton.innerText = index + 1;
+    navButton.classList.add("nav-button");
     navButton.onclick = () => goToQuestion(index);
-    navButton.style.margin = "2px";
-    navButton.style.padding = "5px 10px";
-    navButton.style.border = "none";
-    navButton.style.borderRadius = "4px";
-    navButton.style.cursor = "pointer";
 
     if (answers[index]) {
-      navButton.style.backgroundColor = answers[index].isCorrect ? "#2ecc71" : "#e74c3c";
-      navButton.style.color = "#fff";
-    } else {
-      navButton.style.backgroundColor = "#ddd";
-      navButton.style.color = "#000";
+      navButton.classList.add(answers[index].isCorrect ? "answered-correct" : "answered-incorrect");
     }
 
     navigationContainer.appendChild(navButton);
