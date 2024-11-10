@@ -18,6 +18,20 @@ const toggleThemeButton = document.getElementById('toggle-theme');
 toggleThemeButton.addEventListener('click', (e) => {
     e.preventDefault();
     document.body.classList.toggle('dark-theme');
+    // Optional: Save theme preference in localStorage
+    if (document.body.classList.contains('dark-theme')) {
+        localStorage.setItem('theme', 'dark');
+    } else {
+        localStorage.setItem('theme', 'light');
+    }
+});
+
+// Load theme preference on page load
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+    }
 });
 
 // Smooth Scrolling
@@ -30,7 +44,7 @@ for (const link of links) {
         const targetSection = document.getElementById(targetID);
         if (targetSection) {
             window.scrollTo({
-                top: targetSection.offsetTop - 60, // Adjust for header height
+                top: targetSection.offsetTop - 80, // Adjust for header height
                 behavior: 'smooth'
             });
         }
